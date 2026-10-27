@@ -226,7 +226,7 @@
   </ol>
   <p class="note">先に動かす側、次に動かされる側。</p>
 
-  <p class="h3 ih ac" id="aim"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>Aim Constraintの場合<a class="zl" href="ex-constraint.html#t4"><span class="zn">演習 07</span>課題4</a></p>
+  <p class="h3 ih ac" id="aim"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>Aim Constraintの場合<a class="zl" href="ex-constraint.html#t4"><span class="zn">演習 06</span>課題4</a></p>
   <p class="txt">Aim Constraintでは、ターゲット自身の回転ではなく、<br class="sp">ターゲットが存在する方向を使用する。</p>
   <p class="note">少し考え方が違う</p>
   <pre class="code">ENEMY_AIM_TARGET_CTRL → Aim Constraint → CAMERA_AIM_GRP</pre>
@@ -237,7 +237,7 @@
   </ul>
   <p class="txt">実際のカメラ本体ではなく、<br class="sp">上位の<code>CAMERA_AIM_GRP</code>へ設定すると扱いやすくなる。</p>
 
-  <p class="h3 ih ac" id="multi"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>複数の追従先がある場合<a class="zl" href="ex-constraint.html#t3"><span class="zn">演習 07</span>課題3</a></p>
+  <p class="h3 ih ac" id="multi"><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg>複数の追従先がある場合<a class="zl" href="ex-constraint.html#t3"><span class="zn">演習 06</span>課題3</a></p>
   <p class="txt">荷物の受け渡しでは、<br class="sp">1つのオブジェクトに複数のコンストレインを設定する。<br>左手 / 机 / 右手 → 荷物<br>この場合、<br class="sp">荷物側に複数ターゲットの<br class="sp">Parent Constraintを設定し、<br>Weightを切り替えて制御する。</p>
   <ul class="kv wide">
     <li><b>Weight 1</b><span>コンストレインが効いている状態</span></li>
