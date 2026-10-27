@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>リグの制御 ｜ +9の授業</title>
+<meta name="description" content="ジョイントを動かす FK と IK、リグの Local / Global 制御の考え方、剣を持たせる時の制御。">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='73 133 94 94'><style>path{fill:%23333}@media (prefers-color-scheme:dark){path{fill:%23f5f5f7}}</style><path d='M142.64,133.95h-45.29c-12.9,0-23.4,10.5-23.4,23.4v45.29c0,12.9,10.5,23.4,23.4,23.4h45.29c12.91,0,23.4-10.5,23.4-23.4v-45.29c0-12.9-10.5-23.4-23.4-23.4ZM159.05,157.36v4.97c-.33.01-.66.04-1.01.07-27.22.72-10.09,7.95-21.6-12.24-2.58-3.52-5.97-6.74-9.76-9.21h15.96c9.04,0,16.4,7.36,16.4,16.4ZM103.42,218.32c-3.32-2.83-8.21-3.45-12.24-5.28-.03-1.22-.51-4.96,0-5.52-.85-3.3,9.43,5.86,11.52,4.08,1.68-.04,3.55-2.76,1.92-4.08-.52-1.68-2.7-1.61-3.36-2.4-3.46-.88-5.43-3.7-9.84-4.8.42-9.02.19-18.69.24-28.08-.71-5.09,16.25-.73,19.68-.72,7.08.26,14,.07,21.36,0,5.13-1.36,3.78,2.41,4.08,5.76-.69-.41-3.34-3.05-4.8-1.68-4.28,2.42,1.76,7.35,5.04,7.68.83,7.12-.06,13.79.24,21.12.43,4.78.75,9.7.84,14.65h-34.56c-.02-.23-.05-.48-.12-.73ZM103.56,151.6c-1.39-.61-2.67-1.65-5.04-1.92,2.5-4.57,3.89-2.47,7.44-1.2,8,5.07,11.03-2.64,1.68-5.76,13.64-4.13,26.7,10.16,27.6,20.64.38,3.52-1.11,2.26-3.12,2.64-9.47.02-18.37.23-27.36-.96.04-5.24-7.3-3.83-11.04-5.28.42-2.07,1.24-5.39,2.64-6.48,1.88,2.87,8.55,5.57,11.52,3.12,1.35-3.29-2.19-4.24-4.32-4.8ZM80.95,157.36c0-9.04,7.36-16.4,16.4-16.4h1.99s-.07.06-.1.09c-15.9,10.89-13.03,36.84-13.68,56.88-.27,5.17-.38,10.4-.39,15.67-2.61-2.91-4.22-6.74-4.22-10.94v-45.29ZM143.94,218.98c-.08-9.07-.66-18.21-.68-27.01.03-5.99-.76-11.87-1.06-18.05-.02-2.74-.95-2.96,2.4-2.64,3.95-.2,7.73-.37,11.04-.96,1.13-.16,2.29-.15,3.41-.16v32.48c0,8.61-6.67,15.67-15.1,16.34Z M108.6,177.76c-1.42-4.99-9.21-.66-8.16,3.84,2.14,3.36,7.88-.79,8.16-3.84Z M109.08,192.16c-1.73-.32-3.08-.59-4.8-.48-.92.4-2.29,2.51-.96,3.6,1.93,2.85,13.65,5.46,13.68-.24-1.01-3.18-5.92-1.55-7.92-2.88Z M118.68,176.8c-.22,3.93,3.42,5.88,5.28,9.12-.17,1.25-1.86,2.81-2.64,3.6-1.77,1.06-1.15,3.46,0,4.56,4.24,1.1,8.64-4.57,8.16-8.64-1.89-2.76-6.76-12.35-10.8-8.64Z'/></svg>">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1d1f" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="site.css?v=20261025a">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7.5C10.5 6 8.5 5.5 4 5.5v12c4.5 0 6.5.5 8 2 1.5-1.5 3.5-2 8-2v-12c-4.5 0-6.5.5-8 2zM12 7.5v14"/></symbol>
+    <symbol id="i-pose" viewBox="0 0 24 24"><circle cx="12" cy="4.8" r="1.9"/><path d="M12 7.2v6.3M12 9.2l-5 2.3M12 9.2l4.6-3.2M12 13.5l-3.2 6.5M12 13.5l3.8 6"/></symbol>
+    <symbol id="i-root" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v4.5M12 16v4.5M3.5 12H8M16 12h4.5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10.5 13.5a3.8 3.8 0 005.4 0l3-3a3.8 3.8 0 00-5.4-5.4l-1.2 1.2"/><path d="M13.5 10.5a3.8 3.8 0 00-5.4 0l-3 3a3.8 3.8 0 005.4 5.4l1.2-1.2"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M5 19l1-4.5L15.5 5a2.1 2.1 0 013 3L9 17.5 5 19z"/><path d="M13.5 7l3.5 3.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l2.1 5.4 5.4 2.1-5.4 2.1L12 18.5l-2.1-5.4L4.5 11l5.4-2.1z"/></symbol>
+  </defs>
+</svg>
+
+<nav class="toc" aria-label="目次">
+  <ul>
+    <li><a href="#fkik"><span class="n">01</span>FKとIK</a></li>
+    <li><a href="#local"><span class="n">02</span>Local / Global</a></li>
+  </ul>
+</nav>
+
+<div class="hero-bg" aria-hidden="true"><img src="hero.jpg" alt=""></div>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg><span><a class="eb-home" href="class.html" title="授業のトップへ">+9の授業</a> ／ 座学 07</span></p>
+  <div class="title-row">
+    <svg class="chara" viewBox="73 133 94 94" role="img" aria-hidden="true"><path fill="currentColor" d="M142.64,133.95h-45.29c-12.9,0-23.4,10.5-23.4,23.4v45.29c0,12.9,10.5,23.4,23.4,23.4h45.29c12.91,0,23.4-10.5,23.4-23.4v-45.29c0-12.9-10.5-23.4-23.4-23.4ZM159.05,157.36v4.97c-.33.01-.66.04-1.01.07-27.22.72-10.09,7.95-21.6-12.24-2.58-3.52-5.97-6.74-9.76-9.21h15.96c9.04,0,16.4,7.36,16.4,16.4ZM103.42,218.32c-3.32-2.83-8.21-3.45-12.24-5.28-.03-1.22-.51-4.96,0-5.52-.85-3.3,9.43,5.86,11.52,4.08,1.68-.04,3.55-2.76,1.92-4.08-.52-1.68-2.7-1.61-3.36-2.4-3.46-.88-5.43-3.7-9.84-4.8.42-9.02.19-18.69.24-28.08-.71-5.09,16.25-.73,19.68-.72,7.08.26,14,.07,21.36,0,5.13-1.36,3.78,2.41,4.08,5.76-.69-.41-3.34-3.05-4.8-1.68-4.28,2.42,1.76,7.35,5.04,7.68.83,7.12-.06,13.79.24,21.12.43,4.78.75,9.7.84,14.65h-34.56c-.02-.23-.05-.48-.12-.73ZM103.56,151.6c-1.39-.61-2.67-1.65-5.04-1.92,2.5-4.57,3.89-2.47,7.44-1.2,8,5.07,11.03-2.64,1.68-5.76,13.64-4.13,26.7,10.16,27.6,20.64.38,3.52-1.11,2.26-3.12,2.64-9.47.02-18.37.23-27.36-.96.04-5.24-7.3-3.83-11.04-5.28.42-2.07,1.24-5.39,2.64-6.48,1.88,2.87,8.55,5.57,11.52,3.12,1.35-3.29-2.19-4.24-4.32-4.8ZM80.95,157.36c0-9.04,7.36-16.4,16.4-16.4h1.99s-.07.06-.1.09c-15.9,10.89-13.03,36.84-13.68,56.88-.27,5.17-.38,10.4-.39,15.67-2.61-2.91-4.22-6.74-4.22-10.94v-45.29ZM143.94,218.98c-.08-9.07-.66-18.21-.68-27.01.03-5.99-.76-11.87-1.06-18.05-.02-2.74-.95-2.96,2.4-2.64,3.95-.2,7.73-.37,11.04-.96,1.13-.16,2.29-.15,3.41-.16v32.48c0,8.61-6.67,15.67-15.1,16.34Z M108.6,177.76c-1.42-4.99-9.21-.66-8.16,3.84,2.14,3.36,7.88-.79,8.16-3.84Z M109.08,192.16c-1.73-.32-3.08-.59-4.8-.48-.92.4-2.29,2.51-.96,3.6,1.93,2.85,13.65,5.46,13.68-.24-1.01-3.18-5.92-1.55-7.92-2.88Z M118.68,176.8c-.22,3.93,3.42,5.88,5.28,9.12-.17,1.25-1.86,2.81-2.64,3.6-1.77,1.06-1.15,3.46,0,4.56,4.24,1.1,8.64-4.57,8.16-8.64-1.89-2.76-6.76-12.35-10.8-8.64Z"/></svg>
+    <h1>リグの制御</h1>
+  </div>
+
+  <ul class="chapters" id="chapters">
+    <li><a href="#fkik"><span class="ico"><svg class="ic"><use href="#i-pose"/></svg></span><span class="tt"><span class="n">01</span><b>FKとIK</b></span></a></li>
+    <li><a href="#local"><span class="ico"><svg class="ic"><use href="#i-root"/></svg></span><span class="tt"><span class="n">02</span><b>Local / Global</b></span></a></li>
+  </ul>
+</header>
+
+<section class="ch" id="fkik">
+  <div class="ch-head"><span class="ico"><svg class="ic"><use href="#i-pose"/></svg></span><span class="ch-no">01 ／ FKとIK</span></div>
+  <h2>ジョイントアニメーション<br class="sp">（FK・IK）</h2>
+  <p class="h3 ih mu" id="rig"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>リグとは？</p>
+  <div class="def">
+    <p class="def-t">キャラクターを<br class="sp">動かせるようにするための仕組み。<br>骨（ジョイント）や IK、<br class="sp">モデルを骨に結びつける設定（スキン）、<br>デフォーマやコンストレインなどで組み立てる。</p>
+  </div>
+  <p class="note">リグを作る作業は<br class="sp">「リギング（キャラクターセットアップ）」と呼ぶ。</p>
+
+  <p class="h3 ih mu" style="margin-top:40px"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>FKとIKとは？</p>
+  <p class="txt">ジョイントを動かす方法には2種類ある。</p>
+
+  <div class="subsec" id="fk">
+    <p class="sub-h ih mu"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>FK（Forward Kinematics）</p>
+    <p class="txt">関節を一つずつ回転させて動かす方法</p>
+    <figure class="cam-fig"><video class="cam-vid" src="img/rig/fk.mp4" poster="img/rig/fk.jpg" width="640" height="360" controls muted loop playsinline preload="none" aria-label="FKの説明動画"></video><figcaption>橙の玉＝いま回している関節。<br>根元から順に、1つずつ回す</figcaption></figure>
+    <div class="pair2">
+      <div class="f3">
+        <p class="f3-k"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>特徴</p>
+        <ul><li>ジョイントを直接回転させる</li><li>根元から順番に動きが伝わる</li><li>好きな方向へ自由に回転できる</li></ul>
+      </div>
+      <div class="f3 good">
+        <p class="f3-k"><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg>メリット</p>
+        <ul><li>自然な揺れを作りやすい</li><li>タイミングをずらして柔らかい動きが作れる</li><li>オーバーラップとの相性が良い<a class="zl" href="principles.html#p5"><span class="zn">座学 03</span>オーバーラップ</a></li></ul>
+      </div>
+    </div>
+    <p class="lb" style="margin-top:16px">使用例</p>
+    <ul class="chips" style="margin-top:8px"><li>首</li><li>手首</li><li>足首</li><li>肩</li><li>尻尾</li><li>髪</li><li>布</li><li>ロープ</li><li class="etc">…</li></ul>
+    <p class="txt">色々な方向へ曲がるものに向いている</p>
+  </div>
+
+  <div class="subsec" id="ik">
+    <p class="sub-h ih mu"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>IK（Inverse Kinematics）</p>
+    <p class="txt">先端のコントローラーを動かして<br class="sp">腕や脚全体を動かす方法</p>
+    <figure class="cam-fig"><video class="cam-vid" src="img/rig/ik.mp4" poster="img/rig/ik.jpg" width="640" height="360" controls muted loop playsinline preload="none" aria-label="IKの説明動画"></video><figcaption>橙の箱＝先端のコントローラー。<br>動かすと、腕全体がついてくる</figcaption></figure>
+    <div class="pair2">
+      <div class="f3">
+        <p class="f3-k"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>特徴</p>
+        <ul><li>IKハンドルを動かすだけで<br class="sp">複数のジョイントが動く</li><li>先端位置を決めるだけで姿勢が決まる</li></ul>
+      </div>
+      <div class="f3 good">
+        <p class="f3-k"><svg class="ic" aria-hidden="true"><use href="#i-spark"/></svg>メリット</p>
+        <ul><li>操作が簡単</li><li>手や足を目的の場所へ合わせやすい</li><li>接地や接触が作りやすい</li></ul>
+      </div>
+    </div>
+    <p class="lb" style="margin-top:16px">使用例</p>
+    <ul class="chips" style="margin-top:8px"><li>腕</li><li>脚</li><li class="etc">…</li></ul>
+    <p class="txt">曲がる方向が決まっているものに向いている</p>
+    <p class="note">肘や膝が向く方向は、<br class="sp">Pole Vector（ポールベクター）で決める。<br>腕や脚を動かした時に、<br class="sp">肘や膝が急にひっくり返るのを防ぐ役目もある<a class="zl" href="constraint.html#kinds"><span class="zn">座学 08</span>コンストレインの種類</a></p>
+  </div>
+
+  <p class="h3 ih mu" style="margin-top:40px"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>FKとIKの使い分け</p>
+  <div class="pair2">
+    <div class="f3">
+      <p class="f3-k">FK</p>
+      <ul><li>回転を一つずつ付ける</li><li>自由な回転ができる</li><li>揺れものが得意</li><li>細かな演技向き</li></ul>
+    </div>
+    <div class="f3">
+      <p class="f3-k">IK</p>
+      <ul><li>先端を動かすだけ</li><li>操作が簡単</li><li>接地・接触が得意</li><li>腕・脚向き</li></ul>
+    </div>
+  </div>
+  <p class="point"><span>制作したい動きによって<br class="sp">使い分けることが重要。</span></p>
+</section>
+
+<section class="ch" id="local">
+  <div class="ch-head"><span class="ico"><svg class="ic"><use href="#i-root"/></svg></span><span class="ch-no">02 ／ Local / Global</span></div>
+  <h2>リグにおける<br class="sp"> Local / Global 制御の考え方</h2>
+
+  <div class="items">
+    <article class="item">
+      <p class="item-h"><svg class="ic" aria-hidden="true"><use href="#i-pose"/></svg>Local（ローカル）制御とは</p>
+      <p class="item-t">親（胸・腰・頭など）の変形に追従する、<br>「キャラクターの体の一部として動く」制御。</p>
+    </article>
+    <article class="item">
+      <p class="item-h"><svg class="ic" aria-hidden="true"><use href="#i-root"/></svg>Global（グローバル）制御とは</p>
+      <p class="item-t">親の影響を受けず、ワールド空間に固定される、<br>「世界に固定された状態を維持する」制御。</p>
+    </article>
+  </div>
+  <figure class="cam-fig"><video class="cam-vid" src="img/rig/local-global.mp4" poster="img/rig/local-global.jpg" width="640" height="724" controls muted loop playsinline preload="none" aria-label="Local と Global の違いの説明動画"></video><figcaption>机に手を置いたまま、体を揺らす。<br>黄色の箱＝手のコントローラー</figcaption></figure>
+
+  <p class="h3 ih mu" style="margin-top:40px"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>Local / Global の使い分け</p>
+  <p class="txt">主導権がどこにあるのか？を意識する。</p>
+  <ul class="do bk">
+    <li>剣を持って振り回す <span class="tag">手：Local制御</span></li>
+    <li>剣を地面に突き刺す <span class="tag">手：Global制御</span></li>
+    <li>机に手を置いて体重を乗せる <span class="tag">手：Global制御</span></li>
+    <li>壁を触る <span class="tag">手：Global制御</span></li>
+    <li>通常の歩き <span class="tag">足：Global制御</span></li>
+    <li>宙返りなどのアクロバット <span class="tag">足：Local制御</span></li>
+  </ul>
+  <p class="point"><span>「固定したいか、流したいか」<br class="sp"> が本質。</span></p>
+
+  <div class="subsec" id="sword">
+    <p class="sub-h ih mu"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg>活用例：剣を持たせる時の制御</p>
+    <p class="txt">剣は手そのものではなく、<br class="sp">アタッチポイント（武器ヌル）に追従させる。<a class="zl" href="constraint.html#attach"><span class="zn">座学 08</span>アタッチポイント</a></p>
+  </div>
+</section>
+
+<nav class="lnav" aria-label="授業の移動">
+  <a class="list" href="class.html#list">授業の一覧へ</a>
+</nav>
+
+<footer class="by">
+  <p class="who">+9 ／ 高橋 佐</p>
+  <p class="bio">2002年からゲーム業界へ</p>
+  <p class="bio">2019年からフリーランス</p>
+  <p class="bio">モーションデザイナー</p>
+  <p class="bio">専門学校で講師も兼任</p>
+  <p class="site"><a href="https://takahashi.tas9.net/" target="_blank" rel="noopener">tas9.net</a></p>
+</footer>
+
+</div>
+
+<script src="site.js?v=20261021a"></script>
+</body>
+</html>
