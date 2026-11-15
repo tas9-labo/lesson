@@ -71,6 +71,8 @@ h1{font-size:clamp(22px,3vw,32px);line-height:1.4;letter-spacing:-.02em;font-wei
 .chapters .tt{display:flex;align-items:baseline;gap:6px}
 .chapters .n{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--sub);font-weight:600;font-variant-numeric:tabular-nums}
 .chapters b{font-size:14px;font-weight:600;line-height:1.3}
+.chapters li.ext-start{margin-left:auto}
+.chapters a.icon-only{padding:6px 7px}
 nav.toc{position:fixed;left:0;right:0;top:0;z-index:5;padding:10px 16px;transform:translateY(-100%);transition:transform .2s;
   background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 nav.toc.show{transform:none}
@@ -453,6 +455,7 @@ a.zl:has(.zn)::before{content:none}
   .lead{font-size:14px;margin-top:14px}
   .chapters{gap:6px;margin-top:26px}
   .chapters a{background:var(--tonal);box-shadow:none;padding:5px 10px 5px 6px}
+  .chapters a.icon-only{padding:5px 6px}
   nav.toc{padding:8px 20px;background:color-mix(in srgb,var(--card) 85%,transparent);border-bottom:1px solid var(--line)}
   nav.toc a{background:var(--tonal)}
   section.ch{border-radius:0;box-shadow:none;border:0;border-bottom:1px solid var(--line);padding:38px 20px 32px;margin-top:0}
